@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Card Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #242424;
+            background-image: url("./man-standing-gym-looking-out-window_984355-2768.avif");
+            background-size: cover;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .search-bar input {
+            padding: 10px;
+            width: 80%;
+            max-width: 300px;
+            font-size: 1rem;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .search-bar button {
+            padding: 10px 20px;
+            margin-left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        .search-bar button:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .gym-card {
+            background: rgb(237, 249, 171);
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .gym-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .gym-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .gym-card .card-content {
+            padding: 20px;
+        }
+
+        .gym-card .card-content h3 {
+            font-size: 1.5rem;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .gym-card .card-content p {
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .rating {
+            color: #FFD700;
+        }
+
+        .gym-card .card-content .btn {
+            padding: 10px 20px;
+            margin: 10px 5px;
+            font-size: 1rem;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .gym-card .card-content .call-now {
+            background-color: #4CAF50;
+        }
+
+        .gym-card .card-content .call-now:hover {
+            background-color: #45a049;
+        }
+
+        .gym-card .card-content .enquiry-now {
+            background-color: #008CBA;
+        }
+
+        .gym-card .card-content .enquiry-now:hover {
+            background-color: #007bb5;
+        }
+
+        /* Detailed Gym View */
+        .gym-detail-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: flex-start; /* Modal content starts from the top */
+            padding: 10px;
+            overflow-y: auto; /* Enable scrolling */
+        }
+
+        .gym-detail-content {
+            background: rgb(184, 182, 182);
+            border-radius: 10px;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            margin: 5% auto; /* Center content */
+            max-height: 80vh; /* Limit height */
+            overflow-y: auto; /* Scroll if content overflows */
+        }
+
+        .gym-detail-content img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .gym-detail-content h3 {
+            font-size: 2rem;
+            margin: 10px 0;
+        }
+
+        .gym-detail-content .details {
+            margin: 25px 0;
+            font-size: 1.1rem;
+        }
+
+        .gym-detail-content .btn {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .gym-detail-content .btn.call-now {
+            background-color: #4CAF50;
+        }
+
+        .gym-detail-content .btn.whatsapp {
+            background-color: #25D366;
+        }
+
+        .gym-detail-content .btn.share {
+            background-color: #4CAF50;
+        }
+
+        .comment-section {
+            margin-top: 20px;
+        }
+
+        .comment-section input {
+            width: 80%;
+            padding: 10px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .comment-section button {
+            padding: 10px 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            background-color: #008CBA;
+            color: white;
+            cursor: pointer;
+        }
+
+        .comment-section button:hover {
+            background-color: #034462;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 style="text-align: center; color: #4CAF50;">Gym Listings</h2>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search by gym name or location">
+        <button onclick="searchGyms()">Search</button>
+    </div>
+
+    <div class="container" id="gymContainer">
+        <!-- Gym cards will be dynamically inserted here -->
+    </div>
+
+    <!-- Gym Details Modal -->
+    <div id="gymDetailModal" class="gym-detail-modal">
+        <div class="gym-detail-content">
+            <img id="detailImage" src="" alt="Gym Image">
+            <h3 id="detailName"></h3>
+            <p class="details"><strong>Location:</strong> <span id="detailLocation"></span></p>
+            <p class="details"><strong>Services:</strong> <span id="detailServices"></span></p>
+            <p class="details"><strong>Timings (Open):</strong> <span id="detailTimings"></span></p>
+            <p class="details"><strong>Timings (close):</strong> <span id="closeTime"></span></p>
+            <p class="details"><strong>Rating:</strong> <span id="rating"></span></p>
+            
+            <a href="tel:" id="detailCall" class="btn call-now">Call Now</a>
+            <a href="https://wa.me/" id="detailWhatsApp" target="_blank" class="btn whatsapp">WhatsApp</a>
+            <a href="https://wa.me/" id="detailWhatsApp" target="_blank" class="btn whatsapp">share</a>
+
+            <div class="comment-section">
+                <input type="text" id="commentInput" placeholder="Leave a comment...">
+                <button onclick="addComment()">Submit Comment</button>
+                <div id="commentsList"></div>
+            </div>
+
+            <button onclick="closeDetailModal()" style="width: 15%; height: 50%; margin: 20px; background:green; border-radius: 5px;">Close</button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "data-b828d.firebaseapp.com",
+            databaseURL: "https://data-b828d-default-rtdb.firebaseio.com",
+            projectId: "data-b828d",
+            storageBucket: "data-b828d.appspot.com",
+            messagingSenderId: "996681924328",
+            appId: "1:996681924328:web:3f4bb4177c7589ac18535d"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const dbRef = firebase.database().ref('GYM');
+
+        function fetchGyms() {
+            dbRef.on('value', snapshot => {
+                const gyms = snapshot.val();
+                const gymContainer = document.getElementById('gymContainer');
+                gymContainer.innerHTML = '';
+
+                for (let key in gyms) {
+                    const gym = gyms[key];
+                    const card = document.createElement('div');
+                    card.classList.add('gym-card');
+                    card.innerHTML = `
+                        <img src="${gym.img || 'https://via.placeholder.com/300'}" alt="Gym Image">
+                        <div class="card-content">
+                            <h3>${gym.name}</h3>
+                            <p><strong>Location:</strong> ${gym.location}</p>
+                            <p><strong>Rating:</strong> <span class="rating">${'★'.repeat(gym.rating || 0)}</span></p>
+                            <a href="tel:${gym.contact}" class="btn call-now">Call Now</a>
+                            <a href="${gym.link}" target="_blank" class="btn enquiry-now">Enquiry Now</a>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => openGymDetail(gym));
+                    gymContainer.appendChild(card);
+                }
+            });
+        }
+
+        function openGymDetail(gym) {
+            const modal = document.getElementById("gymDetailModal");
+            modal.style.display = "flex";
+
+            document.getElementById("detailImage").src = gym.img || 'https://via.placeholder.com/300';
+            document.getElementById("detailName").innerText = gym.name;
+            document.getElementById("detailLocation").innerText = gym.location;
+            document.getElementById("detailServices").innerText = gym.services;
+            document.getElementById("detailTimings").innerText = gym.openTime;
+            document.getElementById("closeTime").innerText = gym.closeTime;
+            document.getElementById("rating").innerText = '★'.repeat(gym.rating || 0.0);
+            document.getElementById("detailCall").href = `tel:${gym.contact}`;
+            document.getElementById("detailWhatsApp").href = `https://wa.me/${gym.contact}`;
+
+            modal.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function closeDetailModal() {
+            document.getElementById("gymDetailModal").style.display = "none";
+        }
+
+        function searchGyms() {
+            const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+            const gymContainer = document.getElementById('gymContainer');
+            const gymCards = gymContainer.querySelectorAll('.gym-card');
+
+            gymCards.forEach(card => {
+                const name = card.querySelector('h3').innerText.toLowerCase();
+                const location = card.querySelector('p').innerText.toLowerCase();
+                card.style.display = name.includes(searchTerm) || location.includes(searchTerm) ? 'block' : 'none';
+            });
+        }
+
+        function addComment() {
+            const commentInput = document.getElementById("commentInput");
+            const comment = commentInput.value.trim();
+            if (comment) {
+                const commentsList = document.getElementById("commentsList");
+                const newComment = document.createElement('p');
+                newComment.innerText = comment;
+                commentsList.appendChild(newComment);
+                commentInput.value = '';
+            }
+        }
+
+        fetchGyms();
+    </script>
+</body>
+</html>

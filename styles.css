@@ -1,0 +1,57 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    background-size:cover;
+    background-image:url("./man-standing-gym-looking-out-window_984355-2768.avif");
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: white;
+  }
+  
+  .sign-in-card {
+    background-color: rgba(0, 0, 255, 0.773); /* Blue with transparency */
+    padding: 50px 80px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    text-align: center;
+  }
+  
+  .sign-in-card h2 {
+    margin-bottom: 20px;
+  }
+  
+  input[type="password"] {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .sign-in-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: green;
+    color: white;
+    border: none;
+    margin: 10px 0;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .sign-in-btn:hover {
+    background-color: darkgreen;
+    border-color: aliceblue;
+    
+  }
+  
+  #error-message {
+    color: red;
+    margin-top: 10px;
+  }
+
+  

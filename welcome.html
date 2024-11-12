@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Registration Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 20px;
+            color: #333;
+        }
+        .btnContainer {
+            text-align: right;
+            padding: 20px 40px 0 0;
+        }
+        .openBtn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .openBtn:hover {
+            background-color: #0056b3;
+        }
+        #formContainer {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            width: 400px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        #formContainer input, #formContainer select, #formContainer button {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        #formContainer h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+        #formContainer button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #formContainer button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>Welcome to Admin</header>
+    <div class="btnContainer">
+        <button class="openBtn" onclick="openForm()">Add Gym Details</button>
+    </div>
+    <div id="formContainer">
+        <h3>Gym Registration Form</h3>
+        <form>
+            <input type="text" name="gym_name" placeholder="Gym center Name" required id="name">
+            <input type="text" name="contact_number" placeholder="Contact Number" required id="contact">
+            <input type="time" name="opening_time" required id="openTime">
+            <input type="time" name="closing_time" required id="closeTime">
+            <input type="text" name="services" placeholder="services" required id="services">
+            <input type="text" name="location" placeholder="Location" required id="location">
+            <input type="number" name="rating" min="1" max="5" placeholder="Rating (1-5)" required id="rating">
+            <input type="url" name="gym_url" placeholder="Gym Center URL" required id="link">
+            <input type="url" name="gym_image" placeholder="image url" required id="img">
+            <button type="submit" id="insert">Submit</button>
+
+        </form>
+    </div>
+    
+    <div>
+        
+    </div>
+    <script>
+        function openForm() {
+            document.getElementById('formContainer').style.display = 'block';
+        }
+        function closeForm() {
+            document.getElementById('formContainer').style.display = 'none';
+        }
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase.js"></script>
+    <script src="./fireConfig.js"></script>
+    <script src="./welcome.js"></script>
+</body>
+</html>

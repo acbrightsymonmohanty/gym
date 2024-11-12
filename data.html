@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Data Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        .btn-new {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .btn-new:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #ceebf2;
+        }
+
+        table, th, td {
+            border: 1px solid #000000;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+            width: 10px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        button {
+            padding: 6px 12px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .btn-delete {
+            background-color: #e74c3c;
+        }
+
+        .btn-delete:hover {
+            background-color: #c0392b;
+        }
+
+        .rating {
+            color: #FFD700;
+        }
+
+        .form-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            width: 500px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            
+            
+        }
+
+        .form-container h2 {
+            margin-bottom: 10px;
+        }
+
+        .form-container input {
+            width: 90%;
+            padding: 8px;
+            margin: 5px 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            
+        }
+
+        /* Media Queries for Responsiveness */
+        @media (max-width: 768px) {
+            table, th, td {
+                font-size: 14px;
+            }
+
+            .form-container input {
+                font-size: 14px;
+            }
+
+            .btn-new {
+                width: 100%;
+                font-size: 14px;
+            }
+
+            .form-container {
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .btn-group {
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .btn-group button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            table {
+                font-size: 12px;
+            }
+
+            h2 {
+                font-size: 20px;
+            }
+
+            .btn-new {
+                font-size: 12px;
+                padding: 8px 16px;
+            }
+
+            .form-container {
+                padding: 10px;
+            }
+
+            .form-container input {
+                font-size: 12px;
+            }
+
+            button {
+                font-size: 12px;
+            }
+
+            .btn-group button {
+                font-size: 12px;
+            }
+        }
+
+        /* Flexbox for button container */
+        .btn-group {
+            display: flex;
+            gap: 10px; /* Space between buttons */
+            justify-content: center; /* Center the buttons */
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Welcome to Admin</h2>
+    <button class="btn-new" onclick="showNewGymForm()">+ Add New Gym</button>
+
+    <table id="gymTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Contact</th>
+                <th>Opening Time</th>
+                <th>Closing Time</th>
+                <th>Services</th>
+                <th>Location</th>
+                <th>Rating</th>
+                <th>Link</th>
+                <th>Image</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Gym data will be inserted here -->
+        </tbody>
+    </table>
+
+    <div class="form-container" id="newGymForm" style="display: none;">
+        <h2>Add New Gym</h2>
+        
+        <input type="text" id="newName" placeholder="Name" required>
+        
+        <input type="text" id="newContact" placeholder="Contact" required>
+        
+        <input type="text" id="newOpenTime" placeholder="Opening Time:" required>
+        
+        <input type="text" id="newCloseTime" placeholder="Closing Time:" required>
+        
+        <input type="text" id="newServices" placeholder="Services:" required>
+        
+        <input type="text" id="newLocation" placeholder="Location:" required>
+        
+        <input type="number" id="newRating" min="1" max="5" placeholder="Rating:" required>
+        
+        <input type="text" id="newLink" placeholder="Link: if no link then 'NA' ">
+        
+        <input type="text" id="newImg" placeholder="Image URL:">
+        <button onclick="addNewGym()">Save</button>
+    </div>
+
+    <div class="form-container" id="editGymForm" style="display: none;">
+        <h3>Edit Gym</h3>
+        <input type="hidden" id="editGymKey">
+        <label for="editName">Name:</label>
+        <input type="text" id="editName">
+        <label for="editContact">Contact:</label>
+        <input type="text" id="editContact">
+        <label for="editOpenTime">Opening Time:</label>
+        <input type="text" id="editOpenTime">
+        <label for="editCloseTime">Closing Time:</label>
+        <input type="text" id="editCloseTime">
+        <label for="editServices">Services:</label>
+        <input type="text" id="editServices">
+        <label for="editLocation">Location:</label>
+        <input type="text" id="editLocation">
+        <label for="editRating">Rating:</label>
+        <input type="number" id="editRating" min="1" max="5">
+        <label for="editLink">Link:</label>
+        <input type="text" id="editLink">
+        <label for="editImg">Image URL:</label>
+        <input type="text" id="editImg">
+        <button onclick="saveGymChanges()">Save Changes</button>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "data-b828d.firebaseapp.com",
+            databaseURL: "https://data-b828d-default-rtdb.firebaseio.com",
+            projectId: "data-b828d",
+            storageBucket: "data-b828d.appspot.com",
+            messagingSenderId: "996681924328",
+            appId: "1:996681924328:web:3f4bb4177c7589ac18535d"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const dbRef = firebase.database().ref('GYM');
+
+        function showNewGymForm() {
+            document.getElementById('newGymForm').style.display = 'block';
+            document.getElementById('editGymForm').style.display = 'none';
+        }
+
+        function addNewGym() {
+            const newGym = {
+                name: document.getElementById('newName').value,
+                contact: document.getElementById('newContact').value,
+                openTime: document.getElementById('newOpenTime').value,
+                closeTime: document.getElementById('newCloseTime').value,
+                services: document.getElementById('newServices').value,
+                location: document.getElementById('newLocation').value,
+                rating: parseInt(document.getElementById('newRating').value) || 0,
+                link: document.getElementById('newLink').value,
+                img: document.getElementById('newImg').value
+            };
+
+            dbRef.push(newGym);
+            document.getElementById('newGymForm').style.display = 'none';
+        }
+
+        dbRef.on('value', function(snapshot) {
+            const gymData = snapshot.val();
+            const tableBody = document.getElementById("gymTable").getElementsByTagName("tbody")[0];
+            tableBody.innerHTML = "";
+            for (let key in gymData) {
+                const gym = gymData[key];
+                const row = tableBody.insertRow();
+                row.insertCell(0).innerHTML = gym.name || '';
+                row.insertCell(1).innerHTML = gym.contact || '';
+                row.insertCell(2).innerHTML = gym.openTime || '';
+                row.insertCell(3).innerHTML = gym.closeTime || '';
+                row.insertCell(4).innerHTML = gym.services || '';
+                row.insertCell(5).innerHTML = gym.location || '';
+                row.insertCell(6).innerHTML = `<span class="rating">${'★'.repeat(gym.rating || 0)}</span>`;
+                row.insertCell(7).innerHTML = `<a href="${gym.link}" target="_blank">${gym.link}</a>`;
+                row.insertCell(8).innerHTML = gym.img ? `<img src="${gym.img}" style="width: 100px;">` : 'No image';
+                row.insertCell(9).innerHTML = ` 
+                    <div class="btn-group">
+                        <button onclick="editGym('${key}')">Edit</button>
+                        <button class="btn-delete" onclick="deleteGym('${key}')">Delete</button>
+                    </div>
+                `;
+            }
+        });
+
+        function deleteGym(key) {
+            firebase.database().ref('GYM/' + key).remove();
+        }
+
+        function editGym(key) {
+            const gymRef = firebase.database().ref('GYM/' + key);
+            gymRef.once('value', function(snapshot) {
+                const gym = snapshot.val();
+                document.getElementById('editGymKey').value = key;
+                document.getElementById('editName').value = gym.name;
+                document.getElementById('editContact').value = gym.contact;
+                document.getElementById('editOpenTime').value = gym.openTime;
+                document.getElementById('editCloseTime').value = gym.closeTime;
+                document.getElementById('editServices').value = gym.services;
+                document.getElementById('editLocation').value = gym.location;
+                document.getElementById('editRating').value = gym.rating;
+                document.getElementById('editLink').value = gym.link;
+                document.getElementById('editImg').value = gym.img;
+
+                document.getElementById('newGymForm').style.display = 'none';
+                document.getElementById('editGymForm').style.display = 'block';
+            });
+        }
+
+        function saveGymChanges() {
+            const key = document.getElementById('editGymKey').value;
+            const updatedGym = {
+                name: document.getElementById('editName').value,
+                contact: document.getElementById('editContact').value,
+                openTime: document.getElementById('editOpenTime').value,
+                closeTime: document.getElementById('editCloseTime').value,
+                services: document.getElementById('editServices').value,
+                location: document.getElementById('editLocation').value,
+                rating: parseInt(document.getElementById('editRating').value) || 0,
+                link: document.getElementById('editLink').value,
+                img: document.getElementById('editImg').value
+            };
+
+            dbRef.child(key).update(updatedGym);
+            document.getElementById('editGymForm').style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
