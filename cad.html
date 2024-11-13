@@ -11,15 +11,29 @@
             background-image: url("./man-standing-gym-looking-out-window_984355-2768.avif");
             background-size: cover;
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
 
-        .search-bar {
-            margin-bottom: 20px;
-            text-align: center;
+        /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            padding: 10px 20px;
+            color: white;
         }
 
-        .search-bar input {
+        .navbar .location {
+            font-size: 1.2rem;
+        }
+
+        .navbar .search-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .search-bar input {
             padding: 10px;
             width: 80%;
             max-width: 300px;
@@ -28,7 +42,7 @@
             border: 1px solid #ccc;
         }
 
-        .search-bar button {
+        .navbar .search-bar button {
             padding: 10px 20px;
             margin-left: 10px;
             background-color: #4CAF50;
@@ -39,8 +53,15 @@
             cursor: pointer;
         }
 
-        .search-bar button:hover {
+        .navbar .search-bar button:hover {
             background-color: #45a049;
+        }
+
+        /* Rest of the page */
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 20px;
         }
 
         .container {
@@ -48,6 +69,7 @@
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
             justify-content: center;
+            padding: 20px;
         }
 
         .gym-card {
@@ -209,13 +231,16 @@
 </head>
 <body>
 
-    <h2 style="text-align: center; color: #4CAF50;">Gym Listings</h2>
-
-    <!-- Search Bar -->
-    <div class="search-bar">
-        <input type="text" id="searchInput" placeholder="Search by gym name or location">
-        <button onclick="searchGyms()">Search</button>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="location" id="currentLocation">Location: <span id="locationName">Loading...</span></div>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search by gym name or location">
+            <button onclick="searchGyms()">Search</button>
+        </div>
     </div>
+
+    <h2>Gym Listings</h2>
 
     <div class="container" id="gymContainer">
         <!-- Gym cards will be dynamically inserted here -->
@@ -229,12 +254,12 @@
             <p class="details"><strong>Location:</strong> <span id="detailLocation"></span></p>
             <p class="details"><strong>Services:</strong> <span id="detailServices"></span></p>
             <p class="details"><strong>Timings (Open):</strong> <span id="detailTimings"></span></p>
-            <p class="details"><strong>Timings (close):</strong> <span id="closeTime"></span></p>
+            <p class="details"><strong>Timings (Close):</strong> <span id="closeTime"></span></p>
             <p class="details"><strong>Rating:</strong> <span id="rating"></span></p>
             
             <a href="tel:" id="detailCall" class="btn call-now">Call Now</a>
             <a href="https://wa.me/" id="detailWhatsApp" target="_blank" class="btn whatsapp">WhatsApp</a>
-            <a href="https://wa.me/" id="detailWhatsApp" target="_blank" class="btn whatsapp">share</a>
+            <a href="https://wa.me/" id="detailWhatsApp" target="_blank" class="btn share">Share</a>
 
             <div class="comment-section">
                 <input type="text" id="commentInput" placeholder="Leave a comment...">
@@ -262,6 +287,20 @@
 
         firebase.initializeApp(firebaseConfig);
         const dbRef = firebase.database().ref('GYM');
+
+        // Automatically set location based on browser geolocation
+        function setLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const locationName = `Lat: ${lat.toFixed(2)}, Lon: ${lon.toFixed(2)}`;
+                    document.getElementById("locationName").innerText = locationName;
+                });
+            } else {
+                document.getElementById("locationName").innerText = "Location not available";
+            }
+        }
 
         function fetchGyms() {
             dbRef.on('value', snapshot => {
@@ -334,7 +373,8 @@
             }
         }
 
-        fetchGyms();
+        setLocation();  // Call the function to set location when page loads
+        fetchGyms();  // Fetch gym details from Firebase
     </script>
 </body>
 </html>
